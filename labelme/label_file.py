@@ -145,6 +145,7 @@ class LabelFile(object):
         self.shapes = shapes
         self.imagePath = imagePath
         self.imageData = imageData
+        self.imageShape = (data.get("imageHeight"), data.get("imageWidth"))
         self.filename = filename
         self.otherData = otherData
 
