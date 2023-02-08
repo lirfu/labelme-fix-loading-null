@@ -1439,18 +1439,21 @@ class MainWindow(QtWidgets.QMainWindow):
             self.onNewBrightnessContrast,
             parent=self,
         )
-        brightness, contrast = self.brightnessContrast_values.get(
-            self.filename, (None, None)
+        brightness, contrast, exposure = self.brightnessContrast_values.get(
+            self.filename, (None, None, None)
         )
         if brightness is not None:
             dialog.slider_brightness.setValue(brightness)
         if contrast is not None:
             dialog.slider_contrast.setValue(contrast)
+        if exposure is not None:
+            dialog.slider_exposure.setValue(exposure)
         dialog.exec_()
 
         brightness = dialog.slider_brightness.value()
         contrast = dialog.slider_contrast.value()
-        self.brightnessContrast_values[self.filename] = (brightness, contrast)
+        exposure = dialog.slider_exposure.value()
+        self.brightnessContrast_values[self.filename] = (brightness, contrast, exposure)
 
     def togglePolygons(self, value):
         for item in self.labelList:
@@ -1564,23 +1567,29 @@ class MainWindow(QtWidgets.QMainWindow):
             self.onNewBrightnessContrast,
             parent=self,
         )
-        brightness, contrast = self.brightnessContrast_values.get(
-            self.filename, (None, None)
+        brightness, contrast, exposure = self.brightnessContrast_values.get(
+            self.filename, (None, None, None)
         )
         if self._config["keep_prev_brightness"] and self.recentFiles:
-            brightness, _ = self.brightnessContrast_values.get(
-                self.recentFiles[0], (None, None)
+            brightness, _, _ = self.brightnessContrast_values.get(
+                self.recentFiles[0], (None, None, None)
             )
         if self._config["keep_prev_contrast"] and self.recentFiles:
-            _, contrast = self.brightnessContrast_values.get(
-                self.recentFiles[0], (None, None)
+            _, contrast, _ = self.brightnessContrast_values.get(
+                self.recentFiles[0], (None, None, None)
+            )
+        if self._config["keep_prev_exposure"] and self.recentFiles:
+            _, _, exposure = self.brightnessContrast_values.get(
+                self.recentFiles[0], (None, None, None)
             )
         if brightness is not None:
             dialog.slider_brightness.setValue(brightness)
         if contrast is not None:
             dialog.slider_contrast.setValue(contrast)
-        self.brightnessContrast_values[self.filename] = (brightness, contrast)
-        if brightness is not None or contrast is not None:
+        if exposure is not None:
+            dialog.slider_exposure.setValue(exposure)
+        self.brightnessContrast_values[self.filename] = (brightness, contrast, exposure)
+        if brightness is not None or contrast is not None or exposure is not None:
             dialog.onNewValue(None)
         self.paintCanvas()
         self.addRecentFile(self.filename)
